@@ -12,6 +12,7 @@ Shows a random personalized Chuck Norris joke on your blog, starring yourself. F
 
 This plugin adds a small Wordpress widget that shows a random personalized Chuck Norris joke on your blog, starring yourself.
 These jokes are taken from a database on icndb.com.
+For regular Chuck Norris jokes, please refer to the [Chuck Norris Jokes Widget](http://wordpress.org/extend/plugins/chuck-norris-joke-widget/ "Chuck Norris Jokes Widget").
 
 == Installation ==
 
