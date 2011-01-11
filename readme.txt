@@ -6,7 +6,7 @@ Requires at least: 2.8
 Tested up to: 3.0.4
 Stable tag: 0.5
 
-Shows a random personalized Chuck Norris joke on your blog, starring yourself.
+Shows a random personalized Chuck Norris joke on your blog, starring yourself. For regular Chuck Norris jokes, please refer to the [Chuck Norris Jokes Widget](http://wordpress.org/extend/plugins/chuck-norris-joke-widget/ "Chuck Norris Jokes Widget").
 
 == Description ==
 
