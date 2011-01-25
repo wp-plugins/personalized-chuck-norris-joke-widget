@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Personalized Chuck Norris Jokes Widget
- * Plugin URI: http://maartendecat.be/personalized-chuck-norris-joke-wordpress-plugin/
+ * Plugin URI: http://www.icndb.com/on-your-website/wordpress/
  * Description: A widget that shows personalized Chuck Norris jokes on your blog, starring yourself. For regular Chuck Norris jokes, please refer to the Chuck Norris Jokes Widget.
- * Version: 0.5
+ * Version: 0.7
  * Author: Maarten Decat
  * Author URI: http://maartendecat.be
  * License: GPL2
@@ -27,6 +27,9 @@ add_action( 'widgets_init', 'load_PersonalizedChuckNorrisJokeWidget' );
 
 function load_PersonalizedChuckNorrisJokeWidget() {
 	register_widget( 'PersonalizedChuckNorrisJokeWidget' );
+	wp_enqueue_script('jquery');
+	wp_register_script('chuck-norris-jquery', plugins_url('/personalized-chuck-norris-joke-widget/jquery.icndb.min.js'));
+	wp_enqueue_script('chuck-norris-jquery');
 }
 
 /**
@@ -45,20 +48,7 @@ class PersonalizedChuckNorrisJokeWidget extends WP_Widget {
 		$control_ops = array( 'width' => 300, 'height' => 350, 'id_base' => 'personalized-chuck-norris-jokes-widget' );
 
 		/* Create the widget. */
-		parent::WP_Widget( 'personalized-chuck-norris-jokes-widget', __('Personalized Chuck Norris Jokes', 'personalized-chuck-norris-jokes-widget'), $widget_ops, $control_ops );
-	}
-
-	/**
-	 *	Returns a joke with given first name and last name.
-	 */
-	function getHardcodedJoke($firstName, $lastName) {
-		$jokes = array(
-			"In the Bible, Jesus turned water into wine. But then $firstName $lastName turned that wine into beer.",
-			"Time waits for no man. Unless that man is $firstName $lastName.",
-			"If you spell $firstName $lastName in Scrabble, you win. Forever.",
-			"The Great Wall of China was originally created to keep $firstName $lastName out. It failed miserably.",
-			"While urinating, $firstName $lastName is easily capable of welding titanium.");
-		return $jokes[rand(0,count($jokes)-1)];
+		parent::WP_Widget( 'personalized-chuck-norris-jokes-widget', __('Personalized Chuck Norris Joke', 'personalized-chuck-norris-jokes-widget'), $widget_ops, $control_ops );
 	}
 
 	/**
@@ -74,27 +64,25 @@ class PersonalizedChuckNorrisJokeWidget extends WP_Widget {
 		/* Before widget (defined by themes). */
 		echo $before_widget;
 
-		/* Leave a signature */
-		echo('<!-- Chuck Norris Joke Widget plugin -->');
-		
-		/* Output the quote */
-		$file = fopen ('http://api.icndb.com/jokes/random?client=3&firstName=' . $firstName . '&lastName=' . $lastName, "r");
-		if (!$file) {
-			echo($this->getHardcodedJoke($firstName, $lastName));
-		} else {
-			$result = '';
-			while (!feof ($file)) {
-				$result .= fgets ($file, 1024);
-			}
-			$result = json_decode($result);
-			if($result != null && $result->type == 'success') {
-				echo($result->value->joke);
-			} else {
-				echo($this->getHardcodedJoke($firstName, $lastName));
-			}
-		}
-		fclose($file);
-
+		/* Output the quote */ ?>
+<!-- Personalized Chuck Norris Joke Widget plugin -->
+<div id="personalized-chuck-norris-joke-widget"></div>
+<script type="text/javascript">
+(function($) {
+$.icndb.client.id = 3;
+$.icndb.client.version = 0.7;
+$(document).ready(function() {
+    $.icndb.getRandomJoke({
+		success: function(joke) {
+			$('#personalized-chuck-norris-joke-widget').html(joke.joke);
+		},
+		firstName: "<?php echo($firstName); ?>",
+		lastName: "<?php echo($lastName); ?>",
+	});
+});
+})(jQuery);
+</script>
+<?php
 		/* After widget (defined by themes). */
 		echo $after_widget;
 	}
@@ -123,18 +111,16 @@ class PersonalizedChuckNorrisJokeWidget extends WP_Widget {
 		$defaults = array('firstName' => 'Chuck', 'lastName' => 'Norris');
 		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
 
-		Fill in your name below to star in the jokes yourself. Afterwards, click save.
-
 		<!-- First name: Text Input -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'firstName' ); ?>">First name:</label>
-			<input id="<?php echo $this->get_field_id( 'firstName' ); ?>" name="<?php echo $this->get_field_name( 'firstName' ); ?>" value="<?php echo $instance['firstName']; ?>" style="width:100%;"/>
+			<input id="<?php echo $this->get_field_id( 'firstName' ); ?>" name="<?php echo $this->get_field_name( 'firstName' ); ?>" value="<?php echo $instance['firstName']; ?>" style="width:90%;"/>
 		</p>
 
 		<!-- Last name: Text Input -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'lastName' ); ?>">Last name:</label>
-			<input id="<?php echo $this->get_field_id( 'lastName' ); ?>" name="<?php echo $this->get_field_name( 'lastName' ); ?>" value="<?php echo $instance['lastName']; ?>" style="width:100%;"/>
+			<input id="<?php echo $this->get_field_id( 'lastName' ); ?>" name="<?php echo $this->get_field_name( 'lastName' ); ?>" value="<?php echo $instance['lastName']; ?>" style="width:90%;"/>
 		</p>
 <?php
 	}
