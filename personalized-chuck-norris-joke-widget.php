@@ -3,7 +3,7 @@
  * Plugin Name: Personalized Chuck Norris Jokes Widget
  * Plugin URI: http://www.icndb.com/on-your-website/wordpress/
  * Description: A widget that shows personalized Chuck Norris jokes on your blog, starring yourself. For regular Chuck Norris jokes, please refer to the Chuck Norris Jokes Widget.
- * Version: 0.7
+ * Version: 0.7.1
  * Author: Maarten Decat
  * Author URI: http://maartendecat.be
  * License: GPL2
@@ -27,8 +27,7 @@ add_action( 'widgets_init', 'load_PersonalizedChuckNorrisJokeWidget' );
 
 function load_PersonalizedChuckNorrisJokeWidget() {
 	register_widget( 'PersonalizedChuckNorrisJokeWidget' );
-	wp_enqueue_script('jquery');
-	wp_register_script('chuck-norris-jquery', plugins_url('/personalized-chuck-norris-joke-widget/jquery.icndb.min.js'));
+	wp_register_script('chuck-norris-jquery', plugins_url('/personalized-chuck-norris-joke-widget/jquery.icndb.min.js'), array('jquery'));
 	wp_enqueue_script('chuck-norris-jquery');
 }
 
